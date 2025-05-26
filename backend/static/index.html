@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Face Recognition</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        justify-content: center;
+      }
+      .video-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .video-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .video-container img {
+        border: 2px solid #000;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 640px;
+        max-height: 640px;
+        object-fit: contain;
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .right-panel {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      input,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #upload-form {
+        padding-top: 15px;
+      }
+
+      #delete-form {
+        padding-top: 30px;
+      }
+      label {
+        font-weight: bold;
+        padding-left: 3px;
+      }
+      .logo-div {
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        padding-top: 30px;
+        font-weight: bold;
+      }
+      .logo-div img {
+        width: 70%;
+      }
+      .btn-restart {
+        background-color: #dc3545; /* Red color */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+        width: 100%;
+      }
+      .btn-restart:hover {
+        background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="video-section">
+        <div class="video-container">
+          <img
+            id="video-feed"
+            src="http://192.168.29.103:8000/video_feed"
+            alt="Video Stream"
+          />
+        </div>
+      </div>
+      <div class="right-panel">
+        <h2>Lenok SmartLog</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+          <label for="upload">Upload Face:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter Name"
+            required
+          />
+          <input type="file" id="file" name="file" accept="image/*" required />
+          <button type="button" id="upload-btn">Upload & Register</button>
+        </form>
+        <form id="delete-form">
+          <label for="upload">Delete Face:</label>
+          <input
+            type="text"
+            id="delete-name"
+            placeholder="Enter Name to Delete"
+            required
+          />
+          <button type="button" id="delete-btn">Delete Face</button>
+        </form>
+
+        <button id="restart-video-btn" class="btn-restart">Restart Video</button>
+
+        <div class="logo-div">
+          <div>powered by</div>
+          <img src="/static/logo.png" alt="logo" />
+        </div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById("upload-btn")
+        .addEventListener("click", async function () {
+          const formData = new FormData();
+          formData.append("name", document.getElementById("name").value);
+          formData.append("file", document.getElementById("file").files[0]);
+
+          const response = await fetch("http://192.168.29.103:8000/upload_face", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          alert(result.message);
+        });
+
+      document
+        .getElementById("delete-btn")
+        .addEventListener("click", async function () {
+          const formData = new FormData();
+          formData.append("name", document.getElementById("delete-name").value);
+
+          const response = await fetch("http://192.168.29.103:8000/delete_face", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          alert(result.message);
+        });
+
+      document
+        .getElementById("restart-video-btn")
+        .addEventListener("click", async function () {
+          const response = await fetch("http://192.168.29.103:8000/restart_video", {
+            method: "POST",
+          });
+
+          const result = await response.json();
+          alert(result.message);
+        });
+    </script>
+  </body>
+</html>
