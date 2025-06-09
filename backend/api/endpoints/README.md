@@ -170,5 +170,3 @@ backend/api/endpoints/
      5. Return `{ entry_id, action, timestamp }`
 
 ---
-
-*Now you have everything you need to understand, develop, and extend the face-API endpoints in SmartLog’s backend!*
