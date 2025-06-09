@@ -128,5 +128,3 @@ await db.commit()
   * Add `relationship(...)` for convenient ORM joins.
 
 ---
-
-With these models in place, your FastAPI endpoints can comfortably `INSERT` and `SELECT` face‐event data asynchronously, powering the core audit and analytics functionality of SmartLog.
